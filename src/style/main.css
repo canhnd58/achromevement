@@ -1,0 +1,10 @@
+/*
+ * Global style for Achromevement.
+ */
+
+#hello {
+  display: inline-block;
+  padding: 5px;
+  background-color: #FFA500;
+  color: #FFFFF0;
+}
