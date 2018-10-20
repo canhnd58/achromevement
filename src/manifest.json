@@ -3,6 +3,10 @@
   "name": "Achromevement",
   "version": "1.0.0",
   "description": "Earn achievements by using Google Chrome",
+  "permissions": [
+    "webNavigation",
+    "idle"
+  ],
   "background": {
     "persistent": false,
     "scripts": ["background.js"]
