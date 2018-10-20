@@ -1,4 +1,5 @@
-/* 
+/**
+ * Entry of background scripts
  * Run in the background whenever Chrome starts.
  * Used to register listeners to Chrome events.
  */
