@@ -1,5 +1,5 @@
 # System Overview
-`storage` <-->  background scripts` <--> `popup page`
+`storage` <-->  `background scripts` <--> `popup page`
 
 ## Storage
 Make achievements persistent
