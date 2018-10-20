@@ -14,7 +14,7 @@ If not, download nodejs installer from its [download page](https://nodejs.org/en
 
 ### Building
 
-Go into Achromevement root folder, then execute
+Go into Achromevement root folder and execute
 
     npm install
     gulp build
@@ -27,6 +27,8 @@ Go into Achromevement root folder, then execute
 3. Click **Load unpacked** and choose achromevement/dist directory.
 
 ## Running the tests
+
+    npm test
 
 ## Contributing 
 
