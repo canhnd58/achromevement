@@ -1,5 +1,6 @@
 import gulp from 'gulp';
-import gulpLoadPlugins from 'gulp-load-plugins'; import watchify from 'watchify';
+import gulpLoadPlugins from 'gulp-load-plugins';
+import watchify from 'watchify';
 import browserify from 'browserify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
@@ -25,28 +26,24 @@ const bundleOptions = {
     output: 'background.js',
     extensions: ['.js'],
     destination: dirs.DEST,
-    taskName: 'build:js:background',
   },
   content: {
     entries: [`${dirs.SOURCE}/content/main.js`],
     output: 'content.js',
     extensions: ['.js'],
     destination: dirs.DEST,
-    taskName: 'build:js:background',
   },
   popup: {
     entries: [`${dirs.SOURCE}/popup/main.js`],
     output: 'popup.js',
     extensions: ['.js'],
     destination: dirs.DEST,
-    taskName: 'build:js:background',
   },
   options: {
     entries: [`${dirs.SOURCE}/options/main.js`],
     output: 'options.js',
     extensions: ['.js'],
     destination: dirs.DEST,
-    taskName: 'build:js:background',
   },
 };
 
