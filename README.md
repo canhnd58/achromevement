@@ -1,5 +1,9 @@
 *This project is under development*
 # Achromevement
+[![Build Status](https://travis-ci.org/canhnd58/achromevement.svg?branch=master)](https://travis-ci.org/canhnd58/achromevement)
+[![codecov](https://codecov.io/gh/canhnd58/achromevement/branch/master/graph/badge.svg)](https://codecov.io/gh/canhnd58/achromevement)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Earn achievements by using Google Chrome.
 
 ## Introduction
