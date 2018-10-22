@@ -1,3 +1,13 @@
 {
-  "extends": "standard"
+  "extends": "standard",
+  "rules": {
+    "comma-dangle": [2, "always-multiline"],
+    "semi": [2, "always"]
+  },
+  "globals": {
+    "describe": true,
+    "test": true,
+    "expect": true,
+    "chrome": true
+  }
 }

@@ -1,24 +1,23 @@
 class TriggerAny {
-  constructor(...triggers) {
+  constructor (...triggers) {
     this._triggers = triggers;
   }
-  addListener(callback) {
+  addListener (callback) {
     this._triggers.forEach(trigger => trigger.addListener(callback));
     return this;
   }
-  removeListener(callback) {
+  removeListener (callback) {
     this._triggers.forEach(trigger => trigger.removeListener(callback));
     return this;
   }
 }
 
-
 class TriggerAll {
-  constructor(...triggers) {
+  constructor (...triggers) {
     this._triggers = triggers;
     this._callbacks = [];
   }
-  addListener(callback) {
+  addListener (callback) {
     const triggersCalled = new Array(this._triggers.length).fill(false);
     const triggerCallbacks = new Array(this._triggers.length);
 
@@ -36,7 +35,7 @@ class TriggerAll {
     this._callbacks.push({ callback, triggerCallbacks });
     return this;
   }
-  removeListener(callback) {
+  removeListener (callback) {
     this._callbacks
       .filter(cb => cb.callback == callback)
       .forEach(cb => {
@@ -48,32 +47,29 @@ class TriggerAll {
   }
 }
 
-
 class TriggerChain {
-  constructor(...triggers) {
+  constructor (...triggers) {
     // TODO
   }
-  addListener(callback) {
+  addListener (callback) {
     // TODO
   }
-  removeListener(callback) {
+  removeListener (callback) {
     // TODO
   }
 }
-
 
 class TriggerConditional {
-  constructor(trigger, condition) {
+  constructor (trigger, condition) {
     // TODO
   }
-  addListener(callback) {
+  addListener (callback) {
     // TODO
   }
-  removeListener(callback) {
+  removeListener (callback) {
     // TODO
   }
 }
-
 
 export default {
   any: (...triggers) => new TriggerAny(...triggers),
