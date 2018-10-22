@@ -15,3 +15,5 @@ Read function `createDefaultAchievements` in [achievement.js](../src/background/
 Display achievements
 
 Not done yet
+
+**Check the [wiki](https://github.com/canhnd58/achromevement/wiki) for more details.**
