@@ -112,7 +112,11 @@ gulp.task('build:js', gulp.parallel(
   'build:js:options',
 ));
 
-gulp.task('livereload', () => $.livereload.listen());
+gulp.task('livereload', (cb) => {
+  $.livereload.listen();
+  cb();
+});
+
 gulp.task('watch:js:background', () => createBundle(bundleOptions.background, true));
 gulp.task('watch:js:content', () => createBundle(bundleOptions.content, true));
 gulp.task('watch:js:popup', () => createBundle(bundleOptions.popup, true));
@@ -123,7 +127,7 @@ gulp.task('watch:js', () => gulp.series('livereload', gulp.parallel(
   'watch:js:content',
   'watch:js:popup',
   'watch:js:options',
-)));
+))());
 
 gulp.task('build', gulp.parallel('build:js', 'build:static'));
 gulp.task('watch', gulp.parallel('watch:js', 'watch:static'));
