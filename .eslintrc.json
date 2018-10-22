@@ -1,3 +1,26 @@
 {
-  "extends": "standard"
+  "parser": "babel-eslint",
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": [
+    "react",
+    "prettier"
+  ],
+  "env": {
+    "browser":true,
+    "node": true
+  },
+  "rules": {
+    "prettier/prettier": "error",
+    "import/no-extraneous-dependencies": 0,
+    "react/jsx-filename-extension": 0,
+    "react/forbid-prop-types": 0,
+    "react/no-array-index-key": 0,
+    "react/no-unused-prop-types": 0,
+    "react/prop-types": 0,
+    "react/require-default-props": 0
+  }
 }
