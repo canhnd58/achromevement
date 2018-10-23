@@ -78,10 +78,10 @@ describe('utils', () => {
         expect(t1 >= t2).toBeTruthy();
         expect(t2 < t1).toBeTruthy();
         expect(t2 <= t1).toBeTruthy();
-        expect(t1 != t2).toBeTruthy();
+        expect(t1 !== t2).toBeTruthy();
         expect(t1 < t2).toBeFalsy();
         expect(t2 > t1).toBeFalsy();
-        expect(t1 == t2).toBeFalsy();
+        expect(t1 === t2).toBeFalsy();
       });
     });
   });

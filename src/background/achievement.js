@@ -24,7 +24,7 @@ class Achievement {
     firstTier = Achievement.Tiers.BRONZE,
     hidden = false,
   }) {
-    if (!title) { throw 'Achievement title cannot be empty'; }
+    if (!title) { throw new Error('Achievement title cannot be empty'); }
 
     this._title = title;
     this._goals = goals;
@@ -219,7 +219,7 @@ class Achievement {
   /**
    * Register callback to call before progressing achievement
    */
-  beforeProgress (callbacks) {
+  beforeProgress (callback) {
     this._beforeProgressCallbacks.push(callback);
     return this;
   }
@@ -232,7 +232,7 @@ class Achievement {
     this._done++;
 
     this.goals.forEach((g, i) => {
-      if (this._done == this._goals[i]) { this._goalsReached[i] = true; }
+      if (this._done === this._goals[i]) { this._goalsReached[i] = true; }
     });
 
     if (this.earned) this.unsubscribeAll();
@@ -259,8 +259,8 @@ class Achievement {
   }) {
     const callback = (...args) => {
       if (satisfy(this, ...args)) {
-        if (type == Achievement.Triggers.PROGRESS) this.progress();
-        if (type == Achievement.Triggers.RESET) this.reset();
+        if (type === Achievement.Triggers.PROGRESS) this.progress();
+        if (type === Achievement.Triggers.RESET) this.reset();
       }
     };
 
@@ -274,7 +274,7 @@ class Achievement {
    * Stop listening to a registered event
    */
   unsubscribe (trigger, type) {
-    const matched = t => t.trigger == trigger && t.type == type;
+    const matched = t => t.trigger === trigger && t.type === type;
     this._triggers
       .filter(t => matched(t))
       .forEach(t => t.removeListener(t.callback));
@@ -332,7 +332,7 @@ export const createDefaultAchievements = () => [
         pass.all(
           lastDoneTime.afterTime(new utils.Time(5, 10)),
           a => a.state.lastDoneTime &&
-            utils.dayPassed(a.state.lastDoneTime, new Date()) == 1,
+            utils.dayPassed(a.state.lastDoneTime, new Date()) === 1,
         ),
       ),
     }),

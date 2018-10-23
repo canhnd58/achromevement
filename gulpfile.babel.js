@@ -54,11 +54,10 @@ const logError = (err) => {
       `: Line ${chalk.magenta(err.lineNumber)}` +
       ` & Column ${chalk.magenta(err.columnNumber || err.column)}` +
       `: ${chalk.blue(err.description)}`);
-  }
-  else {
+  } else {
     log(`${chalk.red(err.name)}: ${chalk.yellow(err.message)}`);
   }
-}
+};
 
 const createBundle = (options, watch) => {
   const opts = {
@@ -88,7 +87,7 @@ const createBundle = (options, watch) => {
   }
 
   return rebundle();
-}
+};
 
 const copyStatic = () => gulp.src(staticFiles).pipe(gulp.dest(dirs.DEST));
 
