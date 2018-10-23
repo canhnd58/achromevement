@@ -2,7 +2,8 @@
   "extends": "standard",
   "rules": {
     "comma-dangle": [2, "always-multiline"],
-    "semi": [2, "always"]
+    "semi": [2, "always"],
+    "standard/no-callback-literal": "off"
   },
   "globals": {
     "describe": true,

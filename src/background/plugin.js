@@ -3,8 +3,8 @@ import utils from '../utils';
 export const lastDoneTime = {
   onPlug: (a) => {
     a.state.lastDoneTime = null;
-    a.afterProgress(a => a.state.lastDoneTime = new Date());
-    a.afterReset(a => a.state.lastDoneTime = null);
+    a.afterProgress(a => { a.state.lastDoneTime = new Date(); });
+    a.afterReset(a => { a.state.lastDoneTime = null; });
   },
 
   oncePerDay: (a) => !a.state.lastDoneTime ||

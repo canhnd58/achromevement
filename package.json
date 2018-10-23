@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Earn achievements by using Google Chrome",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
   "author": "Canh Nguyen Duc",
   "license": "MIT",

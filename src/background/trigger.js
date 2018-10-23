@@ -37,17 +37,18 @@ class TriggerAll {
   }
   removeListener (callback) {
     this._callbacks
-      .filter(cb => cb.callback == callback)
+      .filter(cb => cb.callback === callback)
       .forEach(cb => {
         this._triggers.forEach((t, i) => t.removeListener(cb.triggerCallbacks[i]));
       });
 
-    this._callbacks = this._callbacks.filter(cb => cb.callback != callback);
+    this._callbacks = this._callbacks.filter(cb => cb.callback !== callback);
     return this;
   }
 }
 
 class TriggerChain {
+  // eslint-disable-next-line no-useless-constructor
   constructor (...triggers) {
     // TODO
   }
@@ -60,6 +61,7 @@ class TriggerChain {
 }
 
 class TriggerConditional {
+  // eslint-disable-next-line no-useless-constructor
   constructor (trigger, condition) {
     // TODO
   }

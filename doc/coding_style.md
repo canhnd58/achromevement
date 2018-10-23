@@ -2,6 +2,8 @@ We are using code convension of [ESLint Config for JavaScript Standard Style](ht
 - comma-dangle
 - [semi](#semicolons)
 
+And turn off some rules:
+- standard/no-callback-literal
 
 ## Rules
 
