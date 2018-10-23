@@ -1,4 +1,4 @@
-import utils from './utils'
+import utils from './utils';
 
 describe('utils', () => {
   test.each([
@@ -7,7 +7,7 @@ describe('utils', () => {
     [new Date(1995, 10, 15, 22), new Date(1995, 10, 16, 0, 0, 1), 1],
     [new Date(1995, 10, 15, 22), new Date(1995, 10, 15, 23), 0],
   ])(
-    '.dayPassed(%o, %o) == %i', 
+    '.dayPassed(%o, %o) == %i',
     (d1, d2, expected) => {
       expect(utils.dayPassed(d1, d2)).toBe(expected);
       expect(utils.dayPassed(d2, d1)).toBe(expected);
@@ -16,7 +16,6 @@ describe('utils', () => {
 
   describe('.Time', () => {
     describe('can be created', () => {
-
       test('without arguments', () => {
         const t = new utils.Time();
         expect(t).toBeDefined();
@@ -24,7 +23,7 @@ describe('utils', () => {
         expect(t.minute).toBeDefined();
         expect(t.second).toBeDefined();
       });
-      
+
       test('with Date object', () => {
         const d = new Date(1995, 10, 15, 2, 3, 4);
         const t = new utils.Time(d);
@@ -59,7 +58,7 @@ describe('utils', () => {
         expect(t.minute).toBe(20);
         expect(t.second).toBe(0);
       });
-      
+
       test('with hour, minute and second', () => {
         const t = new utils.Time(10, 20, 30);
         expect(t).toBeDefined();
@@ -67,13 +66,12 @@ describe('utils', () => {
         expect(t.minute).toBe(20);
         expect(t.second).toBe(30);
       });
-
     });
 
     describe('can be compared', () => {
       test.each([
         [new utils.Time(10, 1), new utils.Time(10)],
-        [new utils.Time(10, 1), new utils.Time(10, 0 ,1)],
+        [new utils.Time(10, 1), new utils.Time(10, 0, 1)],
         [new utils.Time(10, 20), new utils.Time(9, 40)],
       ])('%s > %s', (t1, t2) => {
         expect(t1 > t2).toBeTruthy();
