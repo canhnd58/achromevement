@@ -7,13 +7,12 @@
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error"
   },
-  "globals": {
-    "describe": true,
-    "test": true,
-    "expect": true,
-    "chrome": true
+  "env": {
+    "jest/globals": true,
+    "webextensions": true
   },
   "plugins": [
-    "react"
+    "react",
+    "jest"
   ]
 }
