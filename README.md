@@ -13,7 +13,6 @@ Some achievements to name
 
 - **Early Bird** - Open a page between 4:50 and 5:10 in the morning for n consecutive days
 - **Researcher** - Visit n different sites
-- **Self Control** - Use facebook for less than 1 hour a day for n consecutive days
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
