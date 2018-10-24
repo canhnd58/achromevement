@@ -3,12 +3,17 @@
   "rules": {
     "comma-dangle": [2, "always-multiline"],
     "semi": [2, "always"],
-    "standard/no-callback-literal": "off"
+    "standard/no-callback-literal": "off",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error"
   },
   "globals": {
     "describe": true,
     "test": true,
     "expect": true,
     "chrome": true
-  }
+  },
+  "plugins": [
+    "react"
+  ]
 }
