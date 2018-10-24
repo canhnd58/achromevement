@@ -33,8 +33,8 @@ class Achievement {
     this._hidden = hidden;
 
     this._done = 0;
+    this._step = 0;
     this._state = {};
-    this._goalsReached = new Array(this._goals.length).fill(false);
     this._triggers = [];
 
     this._beforeProgressCallbacks = [];
@@ -92,11 +92,12 @@ class Achievement {
   };
 
   /**
-   * Current goal
-   * @type {?number}
+   * Current goal or last goal if all goals are completed
+   * @type {number}
    */
   get goal () {
-    return this.goals.filter(g => g > this._done)[0];
+    if (this.earned) return this._goals[this._goals.length - 1];
+    return this._goals[this._step];
   }
 
   /**
@@ -105,14 +106,6 @@ class Achievement {
    */
   get goals () {
     return this._goals;
-  }
-
-  /**
-   * Indicate which goals are reached
-   * @type {boolean[]}
-   */
-  get goalsReached () {
-    return this._goalsReached;
   }
 
   /**
@@ -136,7 +129,7 @@ class Achievement {
    * @type {number}
    */
   get done () {
-    return Math.min(this._done, this.goals[this.goals.length - 1]);
+    return this._done;
   }
 
   /**
@@ -144,7 +137,7 @@ class Achievement {
    * @type {boolean}
    */
   get earned () {
-    return this.goalsReached.every(reached => reached);
+    return this._step === this._goals.length;
   }
 
   /**
@@ -152,8 +145,7 @@ class Achievement {
    * @type {number}
    */
   get step () {
-    const numStep = this.goals.length + 1;
-    return (this.goals.indexOf(this.goal) + numStep) % numStep;
+    return this._step;
   }
 
   /**
@@ -171,7 +163,7 @@ class Achievement {
    * @type {Achievement.Tier}
    */
   get tier () {
-    return this.tiers[this.step];
+    return this.tiers[this._step];
   }
 
   /**
@@ -202,6 +194,7 @@ class Achievement {
    * Reset achievement
    */
   reset () {
+    if (this.earned) return this;
     this._beforeResetCallbacks.forEach(cb => cb(this));
     this._done = 0;
     this._afterResetCallbacks.forEach(cb => cb(this));
@@ -228,12 +221,15 @@ class Achievement {
    * Progress achievement
    */
   progress () {
+    if (this.earned) return this;
+
     this._beforeProgressCallbacks.forEach(cb => cb(this));
+
     this._done++;
 
-    this.goals.forEach((g, i) => {
-      if (this._done === this._goals[i]) { this._goalsReached[i] = true; }
-    });
+    const goal = this._goals.filter(g => g > this._done)[0];
+    if (goal == null) this._step = this._goals.length;
+    else this._step = this._goals.indexOf(goal);
 
     if (this.earned) this.unsubscribeAll();
 
@@ -277,9 +273,9 @@ class Achievement {
     const matched = t => t.trigger === trigger && t.type === type;
     this._triggers
       .filter(t => matched(t))
-      .forEach(t => t.removeListener(t.callback));
+      .forEach(t => t.trigger.removeListener(t.callback));
 
-    this._triggers = this._trigger.filter(t => !matched(t));
+    this._triggers = this._triggers.filter(t => !matched(t));
     return this;
   }
 
@@ -287,14 +283,12 @@ class Achievement {
    * Stop listening to all registered events
    */
   unsubscribeAll () {
-    this._triggers.forEach(t => t.removeListener(t.callback));
+    this._triggers.forEach(t => t.trigger.removeListener(t.callback));
     this._triggers = [];
     return this;
   }
 
-  /**
-   * Subscribe alias
-   */
+  /** Subscribe alias */
   with (config) {
     return this.subscribe(config);
   }
@@ -305,6 +299,7 @@ class Achievement {
  * @function
  * @return {Achievement[]} Array of created achievements
  */
+/* istanbul ignore next */
 export const createDefaultAchievements = () => [
   Achievement
     .create({
