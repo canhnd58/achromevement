@@ -15,6 +15,7 @@ const DEBUG = true;
 const dirs = { SOURCE: 'src', DEST: 'dist' };
 
 const staticFiles = [
+  `${dirs.SOURCE}/images/**/*`,
   `${dirs.SOURCE}/style/**/*.css`,
   `${dirs.SOURCE}/*.html`,
   `${dirs.SOURCE}/manifest.json`,
