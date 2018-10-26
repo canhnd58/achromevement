@@ -4,7 +4,8 @@
   "description": "Earn achievements by using Google Chrome",
   "scripts": {
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write *.js"
   },
   "author": "Canh Nguyen Duc",
   "license": "MIT",
