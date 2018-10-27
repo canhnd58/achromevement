@@ -5,7 +5,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "format": "prettier --write *.js"
+    "format": "prettier --write '**/*.js'"
   },
   "author": "Canh Nguyen Duc",
   "license": "MIT",
