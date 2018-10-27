@@ -1,6 +1,11 @@
 {
-  "extends": "standard",
+  "extends": [
+    "standard",
+    "prettier",
+    "prettier/react"
+  ],
   "rules": {
+    "prettier/prettier": "error",
     "comma-dangle": [2, "always-multiline"],
     "semi": [2, "always"],
     "standard/no-callback-literal": "off",
@@ -13,6 +18,7 @@
   },
   "plugins": [
     "react",
-    "jest"
+    "jest",
+    "prettier"
   ]
 }

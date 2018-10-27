@@ -4,7 +4,8 @@
   "description": "Earn achievements by using Google Chrome",
   "scripts": {
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write '**/*.js'"
   },
   "author": "Canh Nguyen Duc",
   "license": "MIT",
@@ -34,10 +35,12 @@
     "chalk": "^2.4.1",
     "del": "^3.0.0",
     "eslint": "^5.7.0",
+    "eslint-config-prettier": "^3.1.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^21.26.1",
     "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
@@ -51,6 +54,7 @@
     "gulp-uglify": "^3.0.1",
     "jest": "^23.6.0",
     "jsdoc": "^3.5.5",
+    "prettier": "^1.14.3",
     "mockdate": "^2.0.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",

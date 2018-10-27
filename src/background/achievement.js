@@ -17,14 +17,16 @@ class Achievement {
    * @param {boolean} [config.hidden=false] - Whether to show this to users
    * @param {boolean} [config.firstTier=Achievement.Tiers.BRONZE] - Tier on first goal reached
    */
-  constructor ({
+  constructor({
     title,
     goals = [1],
     description = '',
     firstTier = Achievement.Tiers.BRONZE,
     hidden = false,
   }) {
-    if (!title) { throw new Error('Achievement title cannot be empty'); }
+    if (!title) {
+      throw new Error('Achievement title cannot be empty');
+    }
 
     this._title = title;
     this._goals = goals;
@@ -47,7 +49,7 @@ class Achievement {
    * Create an instance of Achievement
    * @param {Object} config
    */
-  static create (config) {
+  static create(config) {
     return new Achievement(config);
   }
 
@@ -55,7 +57,7 @@ class Achievement {
    * @typedef {number} Achievement.Tiers
    * @enum {Achievement.Tiers}
    */
-  static get Tiers () {
+  static get Tiers() {
     return Object.freeze({
       NEW: 0,
       BRONZE: 1,
@@ -68,7 +70,7 @@ class Achievement {
    * @typedef {number} Achievement.Triggers
    * @enum {Achievement.Triggers}
    */
-  static get Triggers () {
+  static get Triggers() {
     return Object.freeze({
       PROGRESS: 0,
       RESET: 1,
@@ -79,7 +81,7 @@ class Achievement {
    * Short description
    * @type {string}
    */
-  get title () {
+  get title() {
     return this._title;
   }
 
@@ -87,15 +89,15 @@ class Achievement {
    * Long description
    * @type {string}
    */
-  get description () {
+  get description() {
     return this._description.replace(/<(\w+)>/g, (match, p) => this[p]);
-  };
+  }
 
   /**
    * Current goal or last goal if all goals are completed
    * @type {number}
    */
-  get goal () {
+  get goal() {
     if (this.earned) return this._goals[this._goals.length - 1];
     return this._goals[this._step];
   }
@@ -104,7 +106,7 @@ class Achievement {
    * All goals
    * @type {number[]}
    */
-  get goals () {
+  get goals() {
     return this._goals;
   }
 
@@ -112,7 +114,7 @@ class Achievement {
    * Tier when first goal reached
    * @type {Achievement.Tiers}
    */
-  get firstTier () {
+  get firstTier() {
     return this._firstTier;
   }
 
@@ -120,7 +122,7 @@ class Achievement {
    * Indicate whether to show this achievement to users
    * @type {boolean}
    */
-  get hidden () {
+  get hidden() {
     return this._hidden;
   }
 
@@ -128,7 +130,7 @@ class Achievement {
    * Current progress
    * @type {number}
    */
-  get done () {
+  get done() {
     return this._done;
   }
 
@@ -136,7 +138,7 @@ class Achievement {
    * Indicate whether all goals are reached
    * @type {boolean}
    */
-  get earned () {
+  get earned() {
     return this._step === this._goals.length;
   }
 
@@ -144,7 +146,7 @@ class Achievement {
    * How many goals have been reached
    * @type {number}
    */
-  get step () {
+  get step() {
     return this._step;
   }
 
@@ -152,7 +154,7 @@ class Achievement {
    * Available tiers
    * @type {Achievement.Tiers[]}
    */
-  get tiers () {
+  get tiers() {
     const Tiers = Achievement.Tiers;
     const tierList = [Tiers.BRONZE, Tiers.SILVER, Tiers.GOLD];
     return [Tiers.NEW, ...tierList.slice(this.firstTier - Tiers.BRONZE)];
@@ -162,7 +164,7 @@ class Achievement {
    * Current tier
    * @type {Achievement.Tier}
    */
-  get tier () {
+  get tier() {
     return this.tiers[this._step];
   }
 
@@ -170,14 +172,14 @@ class Achievement {
    * Store plugins data
    * @type {Object}
    */
-  get state () {
+  get state() {
     return this._state;
   }
 
   /**
    * Add a plugin
    */
-  plug (plugin) {
+  plug(plugin) {
     plugin.onPlug(this);
     return this;
   }
@@ -185,7 +187,7 @@ class Achievement {
   /**
    * Register callback to call before reseting achievement
    */
-  beforeReset (callback) {
+  beforeReset(callback) {
     this._beforeResetCallbacks.push(callback);
     return this;
   }
@@ -193,7 +195,7 @@ class Achievement {
   /**
    * Reset achievement
    */
-  reset () {
+  reset() {
     if (this.earned) return this;
     this._beforeResetCallbacks.forEach(cb => cb(this));
     this._done = 0;
@@ -204,7 +206,7 @@ class Achievement {
   /**
    * Register callback to call after reseting achievement
    */
-  afterReset (callback) {
+  afterReset(callback) {
     this._afterResetCallbacks.push(callback);
     return this;
   }
@@ -212,7 +214,7 @@ class Achievement {
   /**
    * Register callback to call before progressing achievement
    */
-  beforeProgress (callback) {
+  beforeProgress(callback) {
     this._beforeProgressCallbacks.push(callback);
     return this;
   }
@@ -220,7 +222,7 @@ class Achievement {
   /*
    * Progress achievement
    */
-  progress () {
+  progress() {
     if (this.earned) return this;
 
     this._beforeProgressCallbacks.forEach(cb => cb(this));
@@ -240,7 +242,7 @@ class Achievement {
   /**
    * Register callback to call after progressing achievement
    */
-  afterProgress (callback) {
+  afterProgress(callback) {
     this._afterProgressCallbacks.push(callback);
     return this;
   }
@@ -248,9 +250,9 @@ class Achievement {
   /**
    * Listen to events to progress or reset achievement
    */
-  subscribe ({
+  subscribe({
     trigger,
-    condition: satisfy = (a) => true,
+    condition: satisfy = a => true,
     type = Achievement.Triggers.PROGRESS,
   }) {
     const callback = (...args) => {
@@ -269,7 +271,7 @@ class Achievement {
   /**
    * Stop listening to a registered event
    */
-  unsubscribe (trigger, type) {
+  unsubscribe(trigger, type) {
     const matched = t => t.trigger === trigger && t.type === type;
     this._triggers
       .filter(t => matched(t))
@@ -282,14 +284,14 @@ class Achievement {
   /**
    * Stop listening to all registered events
    */
-  unsubscribeAll () {
+  unsubscribeAll() {
     this._triggers.forEach(t => t.trigger.removeListener(t.callback));
     this._triggers = [];
     return this;
   }
 
   /** Subscribe alias */
-  with (config) {
+  with(config) {
     return this.subscribe(config);
   }
 }
@@ -301,19 +303,19 @@ class Achievement {
  */
 /* istanbul ignore next */
 export const createDefaultAchievements = () => [
-  Achievement
-    .create({
-      title: 'Early Bird',
-      description: 'Open a page between 04:50 and 05:10 in the morning for <goal> consecutive days',
-      goals: [2, 7, 30],
-    })
+  Achievement.create({
+    title: 'Early Bird',
+    description:
+      'Open a page between 04:50 and 05:10 in the morning for <goal> consecutive days',
+    goals: [2, 7, 30],
+  })
     .plug(lastDoneTime)
     .with({
       trigger: chrome.webNavigation.onCommitted,
       type: Achievement.Triggers.PROGRESS,
       condition: pass.all(
         lastDoneTime.oncePerDay,
-        lastDoneTime.betweenTime(new utils.Time(4, 50), new utils.Time(5, 10)),
+        lastDoneTime.betweenTime(new utils.Time(4, 50), new utils.Time(5, 10))
       ),
     })
     .with({
@@ -326,9 +328,10 @@ export const createDefaultAchievements = () => [
         fail(lastDoneTime.consecutiveDay),
         pass.all(
           lastDoneTime.afterTime(new utils.Time(5, 10)),
-          a => a.state.lastDoneTime &&
-            utils.dayPassed(a.state.lastDoneTime, new Date()) === 1,
-        ),
+          a =>
+            a.state.lastDoneTime &&
+            utils.dayPassed(a.state.lastDoneTime, new Date()) === 1
+        )
       ),
     }),
 ];
@@ -338,6 +341,6 @@ export const createDefaultAchievements = () => [
  * @function
  * @returns {Achievement} New achievement
  */
-export const achieve = (config) => Achievement.create(config);
+export const achieve = config => Achievement.create(config);
 
 export default Achievement;

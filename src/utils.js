@@ -1,7 +1,6 @@
 const utils = {
-
   Time: class {
-    constructor (hour, minute = 0, second = 0) {
+    constructor(hour, minute = 0, second = 0) {
       if (hour === undefined) {
         const now = new Date();
         this.hour = now.getHours();
@@ -24,11 +23,11 @@ const utils = {
       }
     }
 
-    valueOf () {
+    valueOf() {
       return Date.UTC(1995, 10, 15, this.hour, this.minute, this.second);
     }
 
-    toString () {
+    toString() {
       const hh = this.hour.toString().padStart(2, '0');
       const mm = this.minute.toString().padStart(2, '0');
       const ss = this.second.toString().padStart(2, '0');

@@ -48,13 +48,14 @@ const bundleOptions = {
   },
 };
 
-const logError = (err) => {
+const logError = err => {
   if (err.fileName) {
     log(
       `${chalk.red(err.name)}: ${chalk.yellow(err.fileName)}` +
-      `: Line ${chalk.magenta(err.lineNumber)}` +
-      ` & Column ${chalk.magenta(err.columnNumber || err.column)}` +
-      `: ${chalk.blue(err.description)}`);
+        `: Line ${chalk.magenta(err.lineNumber)}` +
+        ` & Column ${chalk.magenta(err.columnNumber || err.column)}` +
+        `: ${chalk.blue(err.description)}`
+    );
   } else {
     log(`${chalk.red(err.name)}: ${chalk.yellow(err.message)}`);
   }
@@ -71,15 +72,17 @@ const createBundle = (options, watch) => {
   let b = browserify(opts);
   b.transform(babelify.configure({ compact: false }));
 
-  const rebundle = () => b.bundle()
-    .on('error', logError)
-    .pipe(source(options.output))
-    .pipe(buffer())
-    .pipe($.sourcemaps.init({ loadMaps: true }))
-    .pipe($.if(!DEBUG, $.uglify()))
-    .pipe($.sourcemaps.write('./maps'))
-    .pipe(gulp.dest(options.destination))
-    .pipe($.if(watch, $.livereload()));
+  const rebundle = () =>
+    b
+      .bundle()
+      .on('error', logError)
+      .pipe(source(options.output))
+      .pipe(buffer())
+      .pipe($.sourcemaps.init({ loadMaps: true }))
+      .pipe($.if(!DEBUG, $.uglify()))
+      .pipe($.sourcemaps.write('./maps'))
+      .pipe(gulp.dest(options.destination))
+      .pipe($.if(watch, $.livereload()));
 
   if (watch) {
     b = watchify(b);
@@ -100,34 +103,46 @@ gulp.task('watch:static', () => {
   return gulp.watch(staticFiles, copyStatic);
 });
 
-gulp.task('build:js:background', () => createBundle(bundleOptions.background, false));
+gulp.task('build:js:background', () =>
+  createBundle(bundleOptions.background, false)
+);
 gulp.task('build:js:content', () => createBundle(bundleOptions.content, false));
 gulp.task('build:js:popup', () => createBundle(bundleOptions.popup, false));
 gulp.task('build:js:options', () => createBundle(bundleOptions.options, false));
 
-gulp.task('build:js', gulp.parallel(
-  'build:js:background',
-  'build:js:content',
-  'build:js:popup',
-  'build:js:options',
-));
+gulp.task(
+  'build:js',
+  gulp.parallel(
+    'build:js:background',
+    'build:js:content',
+    'build:js:popup',
+    'build:js:options'
+  )
+);
 
-gulp.task('livereload', (cb) => {
+gulp.task('livereload', cb => {
   $.livereload.listen();
   cb();
 });
 
-gulp.task('watch:js:background', () => createBundle(bundleOptions.background, true));
+gulp.task('watch:js:background', () =>
+  createBundle(bundleOptions.background, true)
+);
 gulp.task('watch:js:content', () => createBundle(bundleOptions.content, true));
 gulp.task('watch:js:popup', () => createBundle(bundleOptions.popup, true));
 gulp.task('watch:js:options', () => createBundle(bundleOptions.options, true));
 
-gulp.task('watch:js', () => gulp.series('livereload', gulp.parallel(
-  'watch:js:background',
-  'watch:js:content',
-  'watch:js:popup',
-  'watch:js:options',
-))());
+gulp.task('watch:js', () =>
+  gulp.series(
+    'livereload',
+    gulp.parallel(
+      'watch:js:background',
+      'watch:js:content',
+      'watch:js:popup',
+      'watch:js:options'
+    )
+  )()
+);
 
 gulp.task('build', gulp.parallel('build:js', 'build:static'));
 gulp.task('watch', gulp.parallel('watch:js', 'watch:static'));

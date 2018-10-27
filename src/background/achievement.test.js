@@ -156,9 +156,15 @@ describe('Achievement', () => {
 
   describe('trigger', () => {
     const Trigger = class {
-      addListener (cb) { this.cb = cb; }
-      removeListener (cb) { this.cb = null; }
-      notify () { if (this.cb) this.cb(); }
+      addListener(cb) {
+        this.cb = cb;
+      }
+      removeListener(cb) {
+        this.cb = null;
+      }
+      notify() {
+        if (this.cb) this.cb();
+      }
     };
 
     let triggerProgress, triggerReset, a;
@@ -170,7 +176,7 @@ describe('Achievement', () => {
       a = achieve({ title: 'Test', goals: [2] })
         .subscribe({
           trigger: triggerProgress,
-          condition: (a) => a.title === 'Test',
+          condition: a => a.title === 'Test',
         })
         .with({
           trigger: triggerReset,

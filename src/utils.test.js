@@ -6,13 +6,10 @@ describe('utils', () => {
     [new Date(1995, 10, 15), new Date(1995, 11, 16), 31],
     [new Date(1995, 10, 15, 22), new Date(1995, 10, 16, 0, 0, 1), 1],
     [new Date(1995, 10, 15, 22), new Date(1995, 10, 15, 23), 0],
-  ])(
-    '.dayPassed(%o, %o) == %i',
-    (d1, d2, expected) => {
-      expect(utils.dayPassed(d1, d2)).toBe(expected);
-      expect(utils.dayPassed(d2, d1)).toBe(expected);
-    }
-  );
+  ])('.dayPassed(%o, %o) == %i', (d1, d2, expected) => {
+    expect(utils.dayPassed(d1, d2)).toBe(expected);
+    expect(utils.dayPassed(d2, d1)).toBe(expected);
+  });
 
   describe('.Time', () => {
     describe('can be created', () => {

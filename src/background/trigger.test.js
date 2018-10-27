@@ -2,10 +2,18 @@ import triggers from './trigger';
 
 describe('trigger', () => {
   const Trigger = class {
-    constructor () { this._cbs = []; }
-    addListener (cb) { this._cbs.push(cb); }
-    removeListener (cb) { this._cbs = this._cbs.filter(callback => callback !== cb); }
-    notify () { this._cbs.forEach(cb => cb()); }
+    constructor() {
+      this._cbs = [];
+    }
+    addListener(cb) {
+      this._cbs.push(cb);
+    }
+    removeListener(cb) {
+      this._cbs = this._cbs.filter(callback => callback !== cb);
+    }
+    notify() {
+      this._cbs.forEach(cb => cb());
+    }
   };
 
   let cb1, cb2, tr1, tr2;
