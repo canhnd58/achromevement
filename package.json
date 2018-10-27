@@ -55,6 +55,7 @@
     "jest": "^23.6.0",
     "jsdoc": "^3.5.5",
     "prettier": "^1.14.3",
+    "mockdate": "^2.0.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "regenerator-runtime": "^0.12.1",

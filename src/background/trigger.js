@@ -47,6 +47,7 @@ class TriggerAll {
   }
 }
 
+/*
 class TriggerChain {
   // eslint-disable-next-line no-useless-constructor
   constructor(...triggers) {
@@ -72,11 +73,11 @@ class TriggerConditional {
     // TODO
   }
 }
+*/
 
 export default {
   any: (...triggers) => new TriggerAny(...triggers),
   all: (...triggers) => new TriggerAll(...triggers),
-  chain: (...triggers) => new TriggerChain(...triggers),
-  conditional: (trigger, condition) =>
-    new TriggerConditional(trigger, condition),
+  // chain: (...triggers) => new TriggerChain(...triggers),
+  // conditional: (trigger, condition) => new TriggerConditional(trigger, condition),
 };
