@@ -297,27 +297,25 @@ class Achievement {
 }
 
 /**
- * Create default achievements
+ * Create new instance of Achievement
  * @function
- * @return {Achievement[]} Array of created achievements
+ * @returns {Achievement} New achievement
  */
-/* istanbul ignore next */
-export const createDefaultAchievements = () => [
-  Achievement.create({
+export const achieve = config => Achievement.create(config);
+
+/**
+ * Achievement: Early Bird
+ * Progress: Open a page between 04:50 and 05:10 once a day
+ * Reset: Miss a day
+ */
+export const achieveEarlyBird = () =>
+  achieve({
     title: 'Early Bird',
     description:
       'Open a page between 04:50 and 05:10 in the morning for <goal> consecutive days',
     goals: [2, 7, 30],
   })
     .plug(lastDoneTime)
-    .with({
-      trigger: chrome.webNavigation.onCommitted,
-      type: Achievement.Triggers.PROGRESS,
-      condition: pass.all(
-        lastDoneTime.oncePerDay,
-        lastDoneTime.betweenTime(new utils.Time(4, 50), new utils.Time(5, 10))
-      ),
-    })
     .with({
       trigger: triggers.any(
         chrome.idle.onStateChanged,
@@ -333,14 +331,21 @@ export const createDefaultAchievements = () => [
             utils.dayPassed(a.state.lastDoneTime, new Date()) === 1
         )
       ),
-    }),
-];
+    })
+    .with({
+      trigger: chrome.webNavigation.onCommitted,
+      type: Achievement.Triggers.PROGRESS,
+      condition: pass.all(
+        lastDoneTime.oncePerDay,
+        lastDoneTime.betweenTime(new utils.Time(4, 50), new utils.Time(5, 10))
+      ),
+    });
 
 /**
- * Create new instance of Achievement
+ * Create default achievements
  * @function
- * @returns {Achievement} New achievement
+ * @return {Achievement[]} Array of created achievements
  */
-export const achieve = config => Achievement.create(config);
+export const createDefaultAchievements = () => [achieveEarlyBird()];
 
 export default Achievement;
