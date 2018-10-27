@@ -133,7 +133,8 @@ describe('Achievement', () => {
     const mockFunc2 = jest.fn();
     const a = achieve({ title: 'Test' })
       .afterReset(mockFunc1)
-      .afterReset(mockFunc2); a.reset();
+      .afterReset(mockFunc2);
+    a.reset();
     expect(mockFunc1.mock.calls.length).toBe(1);
     expect(mockFunc2.mock.calls.length).toBe(1);
   });
@@ -269,7 +270,11 @@ describe('default achievements', () => {
     test('properties', () => {
       expect(a.title).toEqual('Early Bird');
       expect(a.goal).toEqual(2);
-      expect(a.description).toEqual(`Open a page between 04:50 and 05:10 in the morning for ${a.goal} consecutive days`);
+      expect(a.description).toEqual(
+        `Open a page between 04:50 and 05:10 in the morning for ${
+          a.goal
+        } consecutive days`
+      );
       expect(a.tier).toEqual(Achievement.Tiers.NEW);
       expect(a.done).toEqual(0);
       expect(a.state.lastDoneTime).toBeNull();
