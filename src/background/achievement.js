@@ -3,7 +3,7 @@
  */
 
 import { pass, fail } from './condition';
-import utils from '../utils';
+import utils from './utils';
 import { lastDoneTime } from './plugin';
 import triggers from './trigger';
 
