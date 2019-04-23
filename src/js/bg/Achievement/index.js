@@ -2,10 +2,8 @@
  * @module achievement
  */
 
-import { pass, fail } from './condition';
-import utils from './utils';
-import { lastDoneTime } from './plugin';
-import triggers from './trigger';
+import storage from 'bg/storage';
+import achieveEarlyBird from 'bg/Achievement/early_bird';
 
 class Achievement {
   /**
@@ -51,6 +49,24 @@ class Achievement {
    */
   static create(config) {
     return new Achievement(config);
+  }
+
+  static get SavedKey() {
+    return '_title';
+  }
+
+  static get SavedProps() {
+    return [
+      '_description',
+      '_goals',
+      '_firstTier',
+      '_hidden',
+      '_done',
+      '_step',
+      '_state',
+      'createdAt',
+      'updatedAt',
+    ];
   }
 
   /**
@@ -199,6 +215,7 @@ class Achievement {
     if (this.earned) return this;
     this._beforeResetCallbacks.forEach(cb => cb(this));
     this._done = 0;
+    this.save();
     this._afterResetCallbacks.forEach(cb => cb(this));
     return this;
   }
@@ -234,7 +251,7 @@ class Achievement {
     else this._step = this._goals.indexOf(goal);
 
     if (this.earned) this.unsubscribeAll();
-
+    this.save();
     this._afterProgressCallbacks.forEach(cb => cb(this));
     return this;
   }
@@ -294,6 +311,27 @@ class Achievement {
   with(config) {
     return this.subscribe(config);
   }
+
+  /** Save to chrome storage */
+  async save() {
+    const objToSave = {};
+    Achievement.SavedProps.forEach(prop => {
+      objToSave[prop] = this[prop];
+    });
+    await storage.set({ [this[Achievement.SavedKey]]: objToSave });
+    return this;
+  }
+
+  async load() {
+    const key = this[Achievement.SavedKey];
+    const values = await storage.get(key)[key];
+    if (values) {
+      Achievement.SavedProps.forEach(prop => {
+        this[prop] = values[prop];
+      });
+    }
+    return this;
+  }
 }
 
 /**
@@ -302,44 +340,6 @@ class Achievement {
  * @returns {Achievement} New achievement
  */
 export const achieve = config => Achievement.create(config);
-
-/**
- * Achievement: Early Bird
- * Progress: Open a page between 04:50 and 05:10 once a day
- * Reset: Miss a day
- */
-export const achieveEarlyBird = () =>
-  achieve({
-    title: 'Early Bird',
-    description:
-      'Open a page between 04:50 and 05:10 in the morning for <goal> consecutive days',
-    goals: [2, 7, 30],
-  })
-    .plug(lastDoneTime)
-    .with({
-      trigger: triggers.any(
-        chrome.idle.onStateChanged,
-        chrome.webNavigation.onCommitted
-      ),
-      type: Achievement.Triggers.RESET,
-      condition: pass.any(
-        fail(lastDoneTime.consecutiveDay),
-        pass.all(
-          lastDoneTime.afterTime(new utils.Time(5, 10)),
-          a =>
-            a.state.lastDoneTime &&
-            utils.dayPassed(a.state.lastDoneTime, new Date()) === 1
-        )
-      ),
-    })
-    .with({
-      trigger: chrome.webNavigation.onCommitted,
-      type: Achievement.Triggers.PROGRESS,
-      condition: pass.all(
-        lastDoneTime.oncePerDay,
-        lastDoneTime.betweenTime(new utils.Time(4, 50), new utils.Time(5, 10))
-      ),
-    });
 
 /**
  * Create default achievements

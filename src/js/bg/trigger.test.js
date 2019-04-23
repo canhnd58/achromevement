@@ -1,4 +1,4 @@
-import triggers from './trigger';
+import triggers from 'bg/trigger';
 
 describe('trigger', () => {
   const Trigger = class {

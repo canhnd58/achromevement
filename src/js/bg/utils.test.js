@@ -1,4 +1,4 @@
-import utils from './utils';
+import utils from 'bg/utils';
 
 describe('utils', () => {
   test.each([

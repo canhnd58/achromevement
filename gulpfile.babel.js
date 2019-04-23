@@ -10,45 +10,19 @@ import log from 'fancy-log';
 import chalk from 'chalk';
 
 const $ = gulpLoadPlugins();
-const DEBUG = true;
 
 const dirs = { SOURCE: 'src', DEST: 'dist' };
 
 const staticFiles = [
-  `${dirs.SOURCE}/images/**/*`,
-  `${dirs.SOURCE}/style/**/*.css`,
-  `${dirs.SOURCE}/*.html`,
   `${dirs.SOURCE}/manifest.json`,
+  `${dirs.SOURCE}/img/**/*`,
+  `${dirs.SOURCE}/css/**/*`,
+  `${dirs.SOURCE}/html/**/*`,
 ];
 
-const bundleOptions = {
-  background: {
-    entries: [`${dirs.SOURCE}/background/main.js`],
-    output: 'background.js',
-    extensions: ['.js'],
-    destination: dirs.DEST,
-  },
-  content: {
-    entries: [`${dirs.SOURCE}/content/main.js`],
-    output: 'content.js',
-    extensions: ['.js'],
-    destination: dirs.DEST,
-  },
-  popup: {
-    entries: [`${dirs.SOURCE}/popup/main.js`],
-    output: 'popup.js',
-    extensions: ['.js'],
-    destination: dirs.DEST,
-  },
-  options: {
-    entries: [`${dirs.SOURCE}/options/main.js`],
-    output: 'options.js',
-    extensions: ['.js'],
-    destination: dirs.DEST,
-  },
-};
+const jsComponents = ['bg', 'cs', 'pu', 'op'];
 
-const logError = err => {
+const logError = function(err) {
   if (err.fileName) {
     log(
       `${chalk.red(err.name)}: ${chalk.yellow(err.fileName)}` +
@@ -59,14 +33,16 @@ const logError = err => {
   } else {
     log(`${chalk.red(err.name)}: ${chalk.yellow(err.message)}`);
   }
+  this.emit('end');
 };
 
-const createBundle = (options, watch) => {
+const createBundle = (jsComponent, watch) => {
   const opts = {
     ...watchify.args,
-    entries: options.entries,
-    extensions: options.extensions,
-    debug: DEBUG,
+    entries: [`${dirs.SOURCE}/js/${jsComponent}/main.js`],
+    extensions: ['.js'],
+    paths: ['./node_modules', `${dirs.SOURCE}/js/`],
+    debug: watch,
   };
 
   let b = browserify(opts);
@@ -76,12 +52,12 @@ const createBundle = (options, watch) => {
     b
       .bundle()
       .on('error', logError)
-      .pipe(source(options.output))
+      .pipe(source(`${jsComponent}.js`))
       .pipe(buffer())
       .pipe($.sourcemaps.init({ loadMaps: true }))
-      .pipe($.if(!DEBUG, $.uglify()))
+      .pipe($.if(!watch, $.uglify()))
       .pipe($.sourcemaps.write('./maps'))
-      .pipe(gulp.dest(options.destination))
+      .pipe(gulp.dest(dirs.DEST))
       .pipe($.if(watch, $.livereload()));
 
   if (watch) {
@@ -89,8 +65,7 @@ const createBundle = (options, watch) => {
     b.on('update', rebundle);
     b.on('log', log);
   }
-
-  return rebundle();
+  return rebundle;
 };
 
 const copyStatic = () => gulp.src(staticFiles).pipe(gulp.dest(dirs.DEST));
@@ -103,45 +78,27 @@ gulp.task('watch:static', () => {
   return gulp.watch(staticFiles, copyStatic);
 });
 
-gulp.task('build:js:background', () =>
-  createBundle(bundleOptions.background, false)
-);
-gulp.task('build:js:content', () => createBundle(bundleOptions.content, false));
-gulp.task('build:js:popup', () => createBundle(bundleOptions.popup, false));
-gulp.task('build:js:options', () => createBundle(bundleOptions.options, false));
+jsComponents.forEach(c => {
+  gulp.task(`build:js:${c}`, createBundle(c, false));
+});
 
-gulp.task(
-  'build:js',
-  gulp.parallel(
-    'build:js:background',
-    'build:js:content',
-    'build:js:popup',
-    'build:js:options'
-  )
-);
+gulp.task('build:js', gulp.parallel(jsComponents.map(c => `build:js:${c}`)));
 
 gulp.task('livereload', cb => {
   $.livereload.listen();
   cb();
 });
 
-gulp.task('watch:js:background', () =>
-  createBundle(bundleOptions.background, true)
-);
-gulp.task('watch:js:content', () => createBundle(bundleOptions.content, true));
-gulp.task('watch:js:popup', () => createBundle(bundleOptions.popup, true));
-gulp.task('watch:js:options', () => createBundle(bundleOptions.options, true));
+jsComponents.forEach(c => {
+  gulp.task(`watch:js:${c}`, createBundle(c, true));
+});
 
-gulp.task('watch:js', () =>
+gulp.task(
+  'watch:js',
   gulp.series(
     'livereload',
-    gulp.parallel(
-      'watch:js:background',
-      'watch:js:content',
-      'watch:js:popup',
-      'watch:js:options'
-    )
-  )()
+    gulp.parallel(jsComponents.map(c => `watch:js:${c}`))
+  )
 );
 
 gulp.task('build', gulp.parallel('build:js', 'build:static'));

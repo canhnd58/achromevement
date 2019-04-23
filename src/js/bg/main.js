@@ -4,7 +4,8 @@
  * Used to register listeners to Chrome events.
  */
 
-import Achievement, { createDefaultAchievements } from './achievement';
+import Achievement, { createDefaultAchievements } from 'bg/Achievement';
+import storage from 'bg/storage';
 
 console.log('Achromevement background is running.');
 
@@ -12,7 +13,9 @@ chrome.runtime.onInstalled.addListener(function() {
   console.log('Achromevement is installed.');
 });
 
-const achievements = createDefaultAchievements();
+Promise.all(createDefaultAchievements().map(a => a.load())).then(as => {
+  window.achievements = as;
+});
 
-window.achievements = achievements;
+window.storage = storage;
 window.Achievement = Achievement;

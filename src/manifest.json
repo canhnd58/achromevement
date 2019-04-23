@@ -5,11 +5,12 @@
   "description": "Earn achievements by using Google Chrome",
   "permissions": [
     "webNavigation",
-    "idle"
+    "idle",
+    "storage"
   ],
   "background": {
     "persistent": false,
-    "scripts": ["background.js"]
+    "scripts": ["bg.js"]
   },
   "browser_action": {
     "default_icon": {
@@ -17,13 +18,13 @@
       "24": "icon24.png",
       "32": "icon32.png"
     },
-    "default_popup": "popup.html"
+    "default_popup": "pu.html"
   },
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "css": ["common.css", "content.css"],
-      "js": ["content.js"]
+      "css": ["common.css", "cs.css"],
+      "js": ["cs.js"]
     }
   ],
   "icons": {
@@ -31,5 +32,5 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "options_page": "options.html"
+  "options_page": "op.html"
 }

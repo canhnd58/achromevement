@@ -1,7 +1,7 @@
-import { achieve } from './achievement';
-import { lastDoneTime } from './plugin';
+import { achieve } from 'bg/Achievement';
+import { lastDoneTime } from 'bg/plugin';
 import MockDate from 'mockdate';
-import utils from './utils';
+import utils from 'bg/utils';
 
 describe('plugin', () => {
   describe('lastDoneTime', () => {
