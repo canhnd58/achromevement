@@ -315,6 +315,11 @@ class Achievement {
   /** Save to chrome storage */
   async save() {
     const objToSave = {};
+    const now = new Date().toString();
+
+    this.createdAt = this.createdAt || now;
+    this.updatedAt = now;
+
     Achievement.SavedProps.forEach(prop => {
       objToSave[prop] = this[prop];
     });
@@ -324,7 +329,8 @@ class Achievement {
 
   async load() {
     const key = this[Achievement.SavedKey];
-    const values = await storage.get(key)[key];
+    const res = await storage.get(key);
+    const values = res[key];
     if (values) {
       Achievement.SavedProps.forEach(prop => {
         this[prop] = values[prop];

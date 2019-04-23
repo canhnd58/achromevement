@@ -1,9 +1,12 @@
 import chrome from 'sinon-chrome';
+import MockDate from 'mockdate';
 
 import Achievement, {
   achieve,
   createDefaultAchievements,
 } from 'bg/Achievement';
+
+import storage from 'bg/storage';
 
 describe('Achievement', () => {
   describe('can be created', () => {
@@ -159,6 +162,59 @@ describe('Achievement', () => {
     expect(mockFunc2.mock.calls.length).toBe(1);
   });
 
+  test('.load() with saved props', async () => {
+    const a = achieve({ title: 'Test' });
+    const spy = jest.spyOn(storage, 'get').mockResolvedValue({
+      Test: {
+        _description: 'Description',
+        _goals: [1, 3, 4],
+        _firstTier: 1,
+        _hidden: false,
+        _state: {},
+        _done: 2,
+        _step: 1,
+      },
+    });
+
+    await a.load();
+    expect(a._title).toEqual('Test');
+    expect(a._description).toEqual('Description');
+    expect(a._goals).toEqual([1, 3, 4]);
+    expect(a._firstTier).toEqual(1);
+    expect(a._hidden).toEqual(false);
+    expect(a._state).toEqual({});
+    expect(a._done).toEqual(2);
+    expect(a._step).toEqual(1);
+    spy.mockRestore();
+  });
+
+  test('.load() without saved props', async () => {
+    const a = achieve({ title: 'Test' });
+    const spy = jest.spyOn(storage, 'get').mockResolvedValue({});
+    await a.load();
+    // Expect no error
+    spy.mockRestore();
+  });
+
+  test('.save()', async () => {
+    MockDate.set(new Date(2018, 0, 1, 5));
+    let store = {};
+    const spy = jest.spyOn(storage, 'set').mockImplementation(
+      obj =>
+        new Promise(resolve => {
+          store = obj;
+          resolve();
+        })
+    );
+    const a = achieve({ title: 'Test' });
+    await a.save();
+    expect(store['Test']).toBeDefined();
+    expect(a.createdAt).toEqual(a.updatedAt);
+    MockDate.set(new Date(2018, 0, 1, 6));
+    await a.save();
+    expect(a.createdAt).not.toEqual(a.updatedAt);
+  });
+
   describe('trigger', () => {
     const Trigger = class {
       addListener(cb) {
@@ -234,12 +290,11 @@ describe('default achievements', () => {
     global.chrome = chrome;
   });
 
-  beforeEach(() => {
+  afterEach(() => {
     chrome.flush();
   });
 
   afterAll(() => {
-    chrome.flush();
     delete global.chrome;
   });
 

@@ -6,20 +6,15 @@
 let current = {};
 let timer = null;
 
-const set = (obj, { force = false, delay = 2000, timestamps = true } = {}) =>
-  new Promise(resolve => {
-    Object.keys(obj).forEach(k => {
-      const values = obj[k];
-      const now = new Date().toString();
-      if (timestamps && typeof values === 'object') {
-        obj[k].createdAt = obj[k].createdAt || now;
-        obj[k].updatedAt = now;
-      }
-    });
-
+const set = (obj, { force = false, delay = 2000 } = {}) =>
+  new Promise((resolve, reject) => {
     current = { ...current, ...obj };
     if (force) {
       chrome.storage.sync.set(current, () => {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+          return;
+        }
         if (timer) {
           clearTimeout(timer);
           timer = null;
@@ -30,7 +25,7 @@ const set = (obj, { force = false, delay = 2000, timestamps = true } = {}) =>
     } else {
       if (!timer) {
         timer = setTimeout(() => {
-          chrome.storage.sync.set(obj);
+          chrome.storage.sync.set(current);
           timer = null;
           current = {};
         }, delay);
@@ -42,16 +37,21 @@ const set = (obj, { force = false, delay = 2000, timestamps = true } = {}) =>
 const remove = async keys => {
   if (timer != null) await set({}, { force: true });
 
-  return new Promise(resolve => {
-    chrome.storage.sync.remove(keys, resolve);
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.remove(keys, () => {
+      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+      else resolve();
+    });
   });
 };
 
 const get = keys =>
-  new Promise(resolve => {
-    chrome.storage.sync.get(keys, results =>
-      resolve({ ...results, ...current })
-    );
+  new Promise((resolve, reject) => {
+    chrome.storage.sync.get(keys, results => {
+      if (chrome.runtime.lastError) {
+        reject(chrome.runtime.lastError);
+      } else resolve({ ...results, ...current });
+    });
   });
 
 export default { set, get, remove };

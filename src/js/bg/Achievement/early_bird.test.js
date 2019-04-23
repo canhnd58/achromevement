@@ -12,7 +12,6 @@ describe('Early Bird', () => {
   });
 
   beforeEach(() => {
-    chrome.flush();
     a = achieveEarlyBird();
     spyProgress = jest.spyOn(a, 'progress');
     spyReset = jest.spyOn(a, 'reset');
@@ -21,10 +20,10 @@ describe('Early Bird', () => {
 
   afterEach(() => {
     MockDate.reset();
+    chrome.flush();
   });
 
   afterAll(() => {
-    chrome.flush();
     delete global.chrome;
   });
 
