@@ -12,7 +12,7 @@ These must be declared in a `manifest.json` file on use.
 Communications among components can be made through [message passing](https://developer.chrome.com/extensions/messaging) or [chrome storage](https://developer.chrome.com/extensions/storage).
 
 ## Background scripts
-Run every time chrome starts, used to listen to events.
+Run every time chrome starts, used to listen to chrome events.
 
 Every event has a `addListener` method for extensions to register callbacks.
 It looks like

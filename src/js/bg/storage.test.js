@@ -57,7 +57,7 @@ describe('storage', () => {
   test('set delay single', async () => {
     const delay = 2000;
     await storage.set({ setKey: 'setValue' }, { delay });
-    expect(store['setKey']).toBeUndefined;
+    expect(store['setKey']).toBeUndefined();
     jest.advanceTimersByTime(delay);
     expect(store['setKey']).toEqual('setValue');
   });
@@ -66,8 +66,8 @@ describe('storage', () => {
     const delay = 2000;
     await storage.set({ k1: 'v1' }, { delay });
     await storage.set({ k2: 'v2' }, { delay });
-    expect(store['k1']).toBeUndefined;
-    expect(store['k2']).toBeUndefined;
+    expect(store['k1']).toBeUndefined();
+    expect(store['k2']).toBeUndefined();
     jest.advanceTimersByTime(delay);
     expect(store['k1']).toEqual('v1');
     expect(store['k2']).toEqual('v2');
@@ -93,8 +93,8 @@ describe('storage', () => {
   test('set force with pending delay', async () => {
     const delay = 2000;
     await storage.set({ k1: 'v1' }, { delay });
-    expect(store['k1']).toBeUndefined;
-    expect(store['k2']).toBeUndefined;
+    expect(store['k1']).toBeUndefined();
+    expect(store['k2']).toBeUndefined();
     await storage.set({ k2: 'v2' }, { force: true });
     expect(store['k1']).toEqual('v1');
     expect(store['k2']).toEqual('v2');
@@ -103,14 +103,14 @@ describe('storage', () => {
   test('remove', async () => {
     store['key'] = 'value';
     await storage.remove(['key']);
-    expect(store['key']).toBeUndefined;
+    expect(store['key']).toBeUndefined();
   });
 
   test('remove with pending delay', async () => {
     store['k1'] = 'v1';
     await storage.set({ k2: 'v2' });
-    await storage.remove(['key']);
-    expect(store['k1']).toBeUndefined;
+    await storage.remove(['k1']);
+    expect(store['k1']).toBeUndefined();
     expect(store['k2']).toEqual('v2');
   });
 

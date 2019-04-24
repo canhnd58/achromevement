@@ -213,6 +213,7 @@ describe('Achievement', () => {
     MockDate.set(new Date(2018, 0, 1, 6));
     await a.save();
     expect(a.createdAt).not.toEqual(a.updatedAt);
+    spy.mockRestore();
   });
 
   describe('trigger', () => {
