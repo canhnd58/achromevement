@@ -21,7 +21,14 @@
   "jest": {
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "moduleDirectories": ["<rootDir>/node_modules/", "<rootDir>/src/js/"]
+    "moduleDirectories": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/src/js/"
+    ],
+    "setupFiles": [
+      "<rootDir>/src/js/setupTests.js"
+    ],
+    "snapshotSerializers": ["enzyme-to-json/serializer"]
   },
   "repository": {
     "type": "git",
@@ -42,6 +49,9 @@
     "cached-path-relative": "^1.0.2",
     "chalk": "^2.4.1",
     "del": "^3.0.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme-to-json": "^3.3.5",
     "eslint": "^5.7.0",
     "eslint-config-prettier": "^3.1.0",
     "eslint-config-standard": "^12.0.0",

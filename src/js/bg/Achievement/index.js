@@ -75,7 +75,6 @@ class Achievement {
    */
   static get Tiers() {
     return Object.freeze({
-      NEW: 0,
       BRONZE: 1,
       SILVER: 2,
       GOLD: 3,
@@ -173,7 +172,7 @@ class Achievement {
   get tiers() {
     const Tiers = Achievement.Tiers;
     const tierList = [Tiers.BRONZE, Tiers.SILVER, Tiers.GOLD];
-    return [Tiers.NEW, ...tierList.slice(this.firstTier - Tiers.BRONZE)];
+    return tierList.slice(this.firstTier - Tiers.BRONZE);
   }
 
   /**
@@ -181,7 +180,7 @@ class Achievement {
    * @type {Achievement.Tier}
    */
   get tier() {
-    return this.tiers[this._step];
+    return this.earned ? this.tiers[this._step - 1] : this.tiers[this._step];
   }
 
   /**

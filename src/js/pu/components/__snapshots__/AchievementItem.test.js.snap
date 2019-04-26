@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AchievementItem do not show description with "hidden" prop 1`] = `
+<div>
+  <div
+    className="title"
+  >
+    <b>
+      No Title
+    </b>
+     (
+    SILVER
+    )
+  </div>
+</div>
+`;
+
+exports[`AchievementItem render correctly 1`] = `
+<div>
+  <div
+    className="title"
+  >
+    <b>
+      No Title
+    </b>
+     (
+    SILVER
+    )
+  </div>
+  <div
+    className="description"
+  >
+    <i>
+      No description
+    </i>
+  </div>
+  <div
+    className="progress"
+  >
+    Progress: 
+    3
+    /
+    2
+    7
+    30
+  </div>
+</div>
+`;
+
+exports[`AchievementItem show hidden description with "earned" prop 1`] = `
+<div>
+  <div
+    className="title"
+  >
+    <b>
+      No Title
+    </b>
+     (
+    SILVER
+    )
+  </div>
+  <div
+    className="description"
+  >
+    <i>
+      No description
+    </i>
+  </div>
+  <div
+    className="progress"
+  >
+    Progress: 
+    3
+    /
+    2
+    7
+    30
+  </div>
+</div>
+`;

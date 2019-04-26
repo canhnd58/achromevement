@@ -49,17 +49,13 @@ describe('Achievement', () => {
     expect(a.title).toEqual('Do it');
     expect(a.goals).toEqual([1, 3]);
     expect(a.firstTier).toEqual(Achievement.Tiers.SILVER);
-    expect(a.tiers).toEqual([
-      Achievement.Tiers.NEW,
-      Achievement.Tiers.SILVER,
-      Achievement.Tiers.GOLD,
-    ]);
+    expect(a.tiers).toEqual([Achievement.Tiers.SILVER, Achievement.Tiers.GOLD]);
     expect(a.hidden).toBeFalsy();
     expect(a.done).toEqual(0);
     expect(a.step).toEqual(0);
     expect(a.earned).toBeFalsy();
     expect(a.description).toEqual(`Done 1 times`);
-    expect(a.tier).toEqual(Achievement.Tiers.NEW);
+    expect(a.tier).toEqual(Achievement.Tiers.SILVER);
     expect(a.state).toEqual({});
 
     a.progress();
@@ -67,14 +63,14 @@ describe('Achievement', () => {
     expect(a.step).toEqual(1);
     expect(a.earned).toBeFalsy();
     expect(a.description).toEqual(`Done 3 times`);
-    expect(a.tier).toEqual(Achievement.Tiers.SILVER);
+    expect(a.tier).toEqual(Achievement.Tiers.GOLD);
 
     a.progress();
     expect(a.done).toEqual(2);
     expect(a.step).toEqual(1);
     expect(a.earned).toBeFalsy();
     expect(a.description).toEqual(`Done 3 times`);
-    expect(a.tier).toEqual(Achievement.Tiers.SILVER);
+    expect(a.tier).toEqual(Achievement.Tiers.GOLD);
 
     a.progress();
     expect(a.done).toEqual(3);
@@ -97,7 +93,7 @@ describe('Achievement', () => {
     a.progress();
     a.reset();
     expect(a.done).toEqual(0);
-    expect(a.tier > Achievement.Tiers.NEW).toBeTruthy();
+    expect(a.tier > a.firstTier).toBeTruthy();
 
     a.progress();
     a.progress();

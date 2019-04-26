@@ -35,7 +35,7 @@ describe('Early Bird', () => {
         a.goal
       } consecutive days`
     );
-    expect(a.tier).toEqual(Achievement.Tiers.NEW);
+    expect(a.tier).toEqual(Achievement.Tiers.BRONZE);
     expect(a.done).toEqual(0);
     expect(a.state.lastDoneTime).toBeNull();
   });
