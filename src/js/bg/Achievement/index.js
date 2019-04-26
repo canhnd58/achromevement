@@ -69,6 +69,10 @@ class Achievement {
     ];
   }
 
+  static get ShownProps() {
+    return ['title', 'description', 'goal', 'hidden', 'done', 'earned', 'tier'];
+  }
+
   /**
    * @typedef {number} Achievement.Tiers
    * @enum {Achievement.Tiers}
@@ -192,6 +196,17 @@ class Achievement {
   }
 
   /**
+   * Data shown to other components
+   * @type {Object}
+   */
+  get shownData() {
+    return Achievement.ShownProps.reduce((obj, k) => {
+      obj[k] = this[k];
+      return obj;
+    }, {});
+  }
+
+  /**
    * Add a plugin
    */
   plug(plugin) {
@@ -244,7 +259,6 @@ class Achievement {
     this._beforeProgressCallbacks.forEach(cb => cb(this));
 
     this._done++;
-
     const goal = this._goals.filter(g => g > this._done)[0];
     if (goal == null) this._step = this._goals.length;
     else this._step = this._goals.indexOf(goal);
@@ -252,6 +266,7 @@ class Achievement {
     if (this.earned) this.unsubscribeAll();
     this.save();
     this._afterProgressCallbacks.forEach(cb => cb(this));
+
     return this;
   }
 

@@ -7,43 +7,29 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import AchievementList from 'pu/components/AchievementList';
-
-const achievements = [
-  {
-    title: 'Title 1',
-    description: 'No description',
-    goal: 2,
-    hidden: false,
-    done: 1,
-    earned: false,
-    tier: 1,
-  },
-  {
-    title: 'Title 2',
-    description: 'No description',
-    goal: 2,
-    hidden: true,
-    done: 1,
-    earned: false,
-    tier: 1,
-  },
-  {
-    title: 'Title 3',
-    description: 'No description',
-    goal: 7,
-    hidden: true,
-    done: 1,
-    earned: true,
-    tier: 2,
-  },
-];
+import { PORT_PU, BG_A_ALL } from 'shared/constant';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      achievements: [],
+    };
+
+    const port = chrome.runtime.connect({ name: PORT_PU });
+
+    port.onMessage.addListener(({ action, data }) => {
+      switch (action) {
+        case BG_A_ALL:
+          this.setState({ achievements: data });
+          break;
+      }
+    });
+  }
+
   render() {
-    return <AchievementList achievements={achievements} />;
+    return <AchievementList achievements={this.state.achievements} />;
   }
 }
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-console.log('Achromevement popup is running');

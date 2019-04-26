@@ -31,6 +31,9 @@ describe('Achievement', () => {
       expect(a.goals).toEqual(goals);
       expect(a.firstTier).toEqual(firstTier);
       expect(a.hidden).toEqual(hidden);
+      expect(Object.keys(a.shownData)).toEqual(
+        expect.arrayContaining(Achievement.ShownProps)
+      );
     });
   });
 

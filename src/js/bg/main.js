@@ -4,18 +4,12 @@
  * Used to register listeners to Chrome events.
  */
 
-import Achievement, { createDefaultAchievements } from 'bg/Achievement';
-import storage from 'bg/storage';
+import { createDefaultAchievements } from 'bg/Achievement';
+import { setupConnections, send } from 'bg/connection';
+import { PORT_PU, BG_A_ALL } from 'shared/constant';
 
-console.log('Achromevement background is running.');
-
-chrome.runtime.onInstalled.addListener(function() {
-  console.log('Achromevement is installed.');
-});
-
-Promise.all(createDefaultAchievements().map(a => a.load())).then(as => {
-  window.achievements = as;
-});
-
-window.storage = storage;
-window.Achievement = Achievement;
+Promise.all(createDefaultAchievements().map(a => a.load())).then(achievements =>
+  setupConnections(() => {
+    send(PORT_PU, BG_A_ALL, achievements.map(a => a.shownData));
+  })
+);
