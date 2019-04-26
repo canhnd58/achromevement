@@ -40,7 +40,7 @@ const logError = function(err) {
 const createBundle = (jsComponent, watch) => {
   const opts = {
     ...watchify.args,
-    entries: [`${dirs.SOURCE}/js/${jsComponent}/main.js`],
+    entries: [`${dirs.SOURCE}/js/${jsComponent}/index.js`],
     extensions: ['.js'],
     paths: ['./node_modules', `${dirs.SOURCE}/js/`],
     debug: !RELEASE,

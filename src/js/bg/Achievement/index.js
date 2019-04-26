@@ -41,6 +41,9 @@ class Achievement {
     this._afterProgressCallbacks = [];
     this._beforeResetCallbacks = [];
     this._afterResetCallbacks = [];
+
+    this._beforeSaveCallbacks = [];
+    this._afterLoadCallbacks = [];
   }
 
   /**
@@ -321,15 +324,33 @@ class Achievement {
     return this;
   }
 
-  /** Subscribe alias */
-  with(config) {
-    return this.subscribe(config);
+  /** Subscribe alias for type PROGRESS */
+  progressOn(trigger, condition) {
+    return this.subscribe({
+      trigger,
+      condition,
+      type: Achievement.Triggers.PROGRESS,
+    });
+  }
+
+  /** Subscribe alias for type RESET */
+  resetOn(trigger, condition) {
+    return this.subscribe({
+      trigger,
+      condition,
+      type: Achievement.Triggers.RESET,
+    });
+  }
+
+  beforeSave(callback) {
+    this._beforeSaveCallbacks.push(callback);
+    return this;
   }
 
   /** Save to chrome storage */
   async save() {
     const objToSave = {};
-    const now = new Date().toString();
+    const now = new Date().toISOString();
 
     this.createdAt = this.createdAt || now;
     this.updatedAt = now;
@@ -337,19 +358,31 @@ class Achievement {
     Achievement.SavedProps.forEach(prop => {
       objToSave[prop] = this[prop];
     });
+
+    this._beforeSaveCallbacks.forEach(cb => cb(objToSave));
+
     await storage.set({ [this[Achievement.SavedKey]]: objToSave });
     return this;
   }
 
+  /** Load from chrome storage */
   async load() {
     const key = this[Achievement.SavedKey];
     const res = await storage.get(key);
     const values = res[key];
+
     if (values) {
+      this._afterLoadCallbacks.forEach(cb => cb(values));
       Achievement.SavedProps.forEach(prop => {
         this[prop] = values[prop];
       });
+      if (this.earned) this.unsubscribeAll();
     }
+    return this;
+  }
+
+  afterLoad(callback) {
+    this._afterLoadCallbacks.push(callback);
     return this;
   }
 }

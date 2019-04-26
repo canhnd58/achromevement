@@ -4,7 +4,10 @@ export const setupConnections = cb =>
   new Promise(resolve => {
     chrome.runtime.onConnect.addListener(port => {
       ports[port.name] = port;
-      cb && cb();
+      port.onDisconnect.addListener(() => {
+        delete ports[port.name];
+      });
+      cb && cb(port);
       resolve();
     });
   });
