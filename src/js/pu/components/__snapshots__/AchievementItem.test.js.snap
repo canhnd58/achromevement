@@ -12,6 +12,7 @@ exports[`AchievementItem do not show description with "hidden" prop 1`] = `
     SILVER
     )
   </div>
+  <hr />
 </div>
 `;
 
@@ -44,6 +45,7 @@ exports[`AchievementItem render correctly 1`] = `
     7
     30
   </div>
+  <hr />
 </div>
 `;
 
@@ -76,5 +78,6 @@ exports[`AchievementItem show hidden description with "earned" prop 1`] = `
     7
     30
   </div>
+  <hr />
 </div>
 `;

@@ -38,6 +38,7 @@ const AchievementItem = ({
         </div>
       </>
     )}
+    <hr />
   </div>
 );
 

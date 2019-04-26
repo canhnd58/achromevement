@@ -10,6 +10,7 @@ import log from 'fancy-log';
 import chalk from 'chalk';
 
 const $ = gulpLoadPlugins();
+const RELEASE = false;
 
 const dirs = { SOURCE: 'src', DEST: 'dist' };
 
@@ -42,11 +43,11 @@ const createBundle = (jsComponent, watch) => {
     entries: [`${dirs.SOURCE}/js/${jsComponent}/main.js`],
     extensions: ['.js'],
     paths: ['./node_modules', `${dirs.SOURCE}/js/`],
-    debug: watch,
+    debug: !RELEASE,
   };
 
   let b = browserify(opts);
-  b.transform(babelify.configure({ compact: false }));
+  b.transform(babelify.configure({ compact: RELEASE }));
 
   const rebundle = () =>
     b
@@ -55,7 +56,7 @@ const createBundle = (jsComponent, watch) => {
       .pipe(source(`${jsComponent}.js`))
       .pipe(buffer())
       .pipe($.sourcemaps.init({ loadMaps: true }))
-      .pipe($.if(!watch, $.uglify()))
+      .pipe($.if(RELEASE, $.uglify()))
       .pipe($.sourcemaps.write('./maps'))
       .pipe(gulp.dest(dirs.DEST))
       .pipe($.if(watch, $.livereload()));

@@ -5,11 +5,8 @@ const AchievementList = ({ achievements }) => (
   <div>
     <p> Achievements </p>
     <hr />
-    {achievements.map(a => (
-      <>
-        <AchievementItem key={a.title} {...a} />
-        <hr />
-      </>
+    {achievements.map((a, idx) => (
+      <AchievementItem key={a.title} {...a} />
     ))}
   </div>
 );
