@@ -1,4 +1,4 @@
-import { pass, fail } from 'bg/condition';
+import { pass, fail } from 'BG/condition';
 
 describe('condition', () => {
   let fn1, fn2, fn3;

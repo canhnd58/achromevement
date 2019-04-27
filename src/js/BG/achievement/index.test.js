@@ -4,9 +4,10 @@ import MockDate from 'mockdate';
 import Achievement, {
   achieve,
   createDefaultAchievements,
-} from 'bg/Achievement';
+  resetAllAchievements,
+} from '.';
 
-import storage from 'bg/storage';
+import storage from 'BG/storage';
 
 describe('Achievement', () => {
   let a;
@@ -282,7 +283,6 @@ describe('Achievement', () => {
 
     test('.load() with saved props', async () => {
       const a = achieve({ title: 'Test' });
-      const spyUnsub = jest.spyOn(a, 'unsubscribeAll');
       const spyGet = jest.spyOn(storage, 'get').mockResolvedValue({
         Test: {
           _description: 'Description',
@@ -291,20 +291,41 @@ describe('Achievement', () => {
           _hidden: false,
           _state: {},
           _done: 2,
+          _step: 2,
+        },
+      });
+
+      await a.load();
+      expect(a.title).toEqual('Test');
+      expect(a.description).toEqual('Description');
+      expect(a.goals).toEqual([1, 3, 4]);
+      expect(a.firstTier).toEqual(1);
+      expect(a.hidden).toEqual(false);
+      expect(a.state).toEqual({});
+      expect(a.done).toEqual(2);
+      expect(a.step).toEqual(2);
+
+      spyGet.mockRestore();
+    });
+
+    test('.load() an earned achievement', async () => {
+      const a = achieve({ title: 'Test' });
+      const spyUnsub = jest.spyOn(a, 'unsubscribeAll');
+      const spyGet = jest.spyOn(storage, 'get').mockResolvedValue({
+        Test: {
+          _description: 'Description',
+          _goals: [1, 3, 4],
+          _firstTier: 1,
+          _hidden: false,
+          _state: {},
+          _done: 4,
           _step: 3,
         },
       });
 
       await a.load();
-      expect(a._title).toEqual('Test');
-      expect(a._description).toEqual('Description');
-      expect(a._goals).toEqual([1, 3, 4]);
-      expect(a._firstTier).toEqual(1);
-      expect(a._hidden).toEqual(false);
-      expect(a._state).toEqual({});
-      expect(a._done).toEqual(2);
-      expect(a._step).toEqual(3);
-      expect(spyUnsub.mock.calls.length).toEqual(1);
+      expect(a.earned).toBeTruthy();
+      expect(spyUnsub).toHaveBeenCalled();
 
       spyGet.mockRestore();
       spyUnsub.mockRestore();
@@ -447,5 +468,19 @@ describe('default achievements', () => {
     as.forEach(a => {
       expect(a).toBeInstanceOf(Achievement);
     });
+  });
+
+  test('resetAllAchievements', () => {
+    let as = createDefaultAchievements();
+    as.forEach(a => a.progress());
+    const spy = jest.spyOn(storage, 'clear').mockResolvedValue();
+    resetAllAchievements(as);
+    as.forEach(a => {
+      expect(a.done).toEqual(0);
+      expect(a.step).toEqual(0);
+      expect(a.state).toEqual({});
+    });
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 });

@@ -1,6 +1,6 @@
 const ports = {};
 
-export const setupConnections = cb =>
+export const onConnect = cb =>
   new Promise(resolve => {
     chrome.runtime.onConnect.addListener(port => {
       ports[port.name] = port;

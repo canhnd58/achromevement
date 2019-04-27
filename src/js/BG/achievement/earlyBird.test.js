@@ -1,8 +1,8 @@
 import chrome from 'sinon-chrome';
 import MockDate from 'mockdate';
 
-import achieveEarlyBird from 'bg/Achievement/early_bird';
-import Achievement from 'bg/Achievement';
+import achieveEarlyBird from 'BG/achievement/earlyBird';
+import Achievement from 'BG/achievement';
 
 describe('Early Bird', () => {
   let a, spyProgress, spyReset;

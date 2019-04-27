@@ -31,7 +31,7 @@ const utils = {
       const hh = this.hour.toString().padStart(2, '0');
       const mm = this.minute.toString().padStart(2, '0');
       const ss = this.second.toString().padStart(2, '0');
-      return `${hh}:${mm}:${ss}`;
+      return ss === '00' ? `${hh}:${mm}` : `${hh}:${mm}:${ss}`;
     }
   },
 

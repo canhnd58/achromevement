@@ -4,11 +4,11 @@
  * Reset: Miss a day
  */
 
-import { pass, fail } from 'bg/condition';
-import utils from 'bg/utils';
-import { doneTime } from 'bg/plugin';
-import triggers from 'bg/trigger';
-import { achieve } from 'bg/Achievement';
+import { pass, fail } from 'BG/condition';
+import utils from 'BG/utils';
+import { doneTime } from 'BG/plugin';
+import triggers from 'BG/trigger';
+import { achieve } from 'BG/achievement';
 
 const achieveEarlyBird = () =>
   achieve({
@@ -29,7 +29,7 @@ const achieveEarlyBird = () =>
           doneTime.after(new utils.Time(5, 10)),
           a =>
             a.state.lastDoneTime &&
-            utils.dayPassed(a.state.lastDoneTime, new Date()) === 1
+            utils.dayPassed(new Date(a.state.lastDoneTime), new Date()) === 1
         )
       )
     )

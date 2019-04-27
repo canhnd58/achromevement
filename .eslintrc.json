@@ -20,5 +20,6 @@
     "react",
     "jest",
     "prettier"
-  ]
+  ],
+  "parser": "babel-eslint"
 }

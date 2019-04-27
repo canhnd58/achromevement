@@ -2,8 +2,8 @@
  * @module achievement
  */
 
-import storage from 'bg/storage';
-import achieveEarlyBird from 'bg/Achievement/early_bird';
+import storage from 'BG/storage';
+import achieveEarlyBird from 'BG/achievement/earlyBird';
 
 class Achievement {
   /**
@@ -41,9 +41,6 @@ class Achievement {
     this._afterProgressCallbacks = [];
     this._beforeResetCallbacks = [];
     this._afterResetCallbacks = [];
-
-    this._beforeSaveCallbacks = [];
-    this._afterLoadCallbacks = [];
   }
 
   /**
@@ -232,8 +229,8 @@ class Achievement {
     if (this.earned) return this;
     this._beforeResetCallbacks.forEach(cb => cb(this));
     this._done = 0;
-    this.save();
     this._afterResetCallbacks.forEach(cb => cb(this));
+    this.save();
     return this;
   }
 
@@ -267,8 +264,8 @@ class Achievement {
     else this._step = this._goals.indexOf(goal);
 
     if (this.earned) this.unsubscribeAll();
-    this.save();
     this._afterProgressCallbacks.forEach(cb => cb(this));
+    this.save();
 
     return this;
   }
@@ -342,11 +339,6 @@ class Achievement {
     });
   }
 
-  beforeSave(callback) {
-    this._beforeSaveCallbacks.push(callback);
-    return this;
-  }
-
   /** Save to chrome storage */
   async save() {
     const objToSave = {};
@@ -359,8 +351,6 @@ class Achievement {
       objToSave[prop] = this[prop];
     });
 
-    this._beforeSaveCallbacks.forEach(cb => cb(objToSave));
-
     await storage.set({ [this[Achievement.SavedKey]]: objToSave });
     return this;
   }
@@ -372,17 +362,11 @@ class Achievement {
     const values = res[key];
 
     if (values) {
-      this._afterLoadCallbacks.forEach(cb => cb(values));
       Achievement.SavedProps.forEach(prop => {
         this[prop] = values[prop];
       });
       if (this.earned) this.unsubscribeAll();
     }
-    return this;
-  }
-
-  afterLoad(callback) {
-    this._afterLoadCallbacks.push(callback);
     return this;
   }
 }
@@ -397,8 +381,24 @@ export const achieve = config => Achievement.create(config);
 /**
  * Create default achievements
  * @function
- * @return {Achievement[]} Array of created achievements
+ * @returns {Achievement[]} Array of created achievements
  */
 export const createDefaultAchievements = () => [achieveEarlyBird()];
+
+/**
+ * Reset all achievements
+ * @function
+ * @returns {Promise}
+ */
+export const resetAllAchievements = achievements => {
+  achievements.forEach(a => {
+    a._done = 0;
+    a._step = 0;
+    a._state = {};
+    a.createdAt = null;
+    a.updatedAt = null;
+  });
+  return storage.clear();
+};
 
 export default Achievement;

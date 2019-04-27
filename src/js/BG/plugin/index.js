@@ -1,31 +1,23 @@
-import utils from 'bg/utils';
+import utils from 'BG/utils';
 
 export const doneTime = {
   onPlug: a => {
     a.state.lastDoneTime = null;
     a.afterProgress(a => {
-      a.state.lastDoneTime = new Date();
+      a.state.lastDoneTime = new Date().toISOString();
     });
     a.afterReset(a => {
       a.state.lastDoneTime = null;
-    });
-    a.beforeSave(props => {
-      if (props._state.lastDoneTime)
-        props._state.lastDoneTime = props._state.lastDoneTime.toISOString();
-    });
-    a.afterLoad(props => {
-      if (props._state.lastDoneTime)
-        props._state.lastDoneTime = new Date(props._state.lastDoneTime);
     });
   },
 
   oncePerDay: a =>
     !a.state.lastDoneTime ||
-    utils.dayPassed(a.state.lastDoneTime, new Date()) > 0,
+    utils.dayPassed(new Date(a.state.lastDoneTime), new Date()) > 0,
 
   consecutiveDays: a =>
     !a.state.lastDoneTime ||
-    utils.dayPassed(a.state.lastDoneTime, new Date()) <= 1,
+    utils.dayPassed(new Date(a.state.lastDoneTime), new Date()) <= 1,
 
   between: (t1, t2) => a => {
     let now = new utils.Time(new Date());

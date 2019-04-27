@@ -3,6 +3,7 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import watchify from 'watchify';
 import browserify from 'browserify';
 import babelify from 'babelify';
+import envify from 'envify/custom';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import del from 'del';
@@ -10,7 +11,9 @@ import log from 'fancy-log';
 import chalk from 'chalk';
 
 const $ = gulpLoadPlugins();
-const RELEASE = false;
+
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+const RELEASE = process.env.NODE_ENV === 'production';
 
 const dirs = { SOURCE: 'src', DEST: 'dist' };
 
@@ -21,7 +24,7 @@ const staticFiles = [
   `${dirs.SOURCE}/html/**/*`,
 ];
 
-const jsComponents = ['bg', 'cs', 'pu', 'op'];
+const jsComponents = ['BG', 'CS', 'PU', 'OP'];
 
 const logError = function(err) {
   if (err.fileName) {
@@ -47,7 +50,12 @@ const createBundle = (jsComponent, watch) => {
   };
 
   let b = browserify(opts);
-  b.transform(babelify.configure({ compact: RELEASE }));
+  b.transform(babelify.configure({ compact: RELEASE })).transform(
+    envify({
+      _: 'purge',
+      NODE_ENV: process.env.NODE_ENV,
+    })
+  );
 
   const rebundle = () =>
     b

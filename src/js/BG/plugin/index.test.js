@@ -1,53 +1,28 @@
-import { achieve } from 'bg/Achievement';
-import { doneTime } from 'bg/plugin';
+import { achieve } from 'BG/achievement';
+import { doneTime } from 'BG/plugin';
 import MockDate from 'mockdate';
-import utils from 'bg/utils';
-import storage from 'bg/storage';
+import utils from 'BG/utils';
 
 describe('plugin', () => {
   describe('doneTime', () => {
     const now = new Date(1995, 10, 15, 10, 30);
-    let a, spyGet, spySet;
+    let a;
 
     beforeEach(() => {
       a = achieve({ title: 'Test', goals: [10] });
       a.plug(doneTime);
       MockDate.set(now);
-      spyGet = jest.spyOn(storage, 'get').mockResolvedValue({
-        Test: {
-          _state: { lastDoneTime: null },
-          _step: 0,
-          _goals: [10],
-        },
-      });
-      spySet = jest.spyOn(storage, 'set').mockResolvedValue();
     });
 
     afterEach(() => {
       MockDate.reset();
-      spyGet.mockRestore();
-      spySet.mockRestore();
     });
 
     test('.onPlug()', () => {
       a.progress();
-      expect(a.state.lastDoneTime).toEqual(now);
+      expect(a.state.lastDoneTime).toEqual(now.toISOString());
       a.reset();
       expect(a.state.lastDoneTime).toBeNull();
-    });
-
-    test('.onPlug() load', async () => {
-      await a.load();
-      expect(a.state.lastDoneTime).toBeNull();
-      spyGet = jest.spyOn(storage, 'get').mockResolvedValue({
-        Test: {
-          _state: { lastDoneTime: now.toISOString() },
-          _step: 0,
-          _goals: [10],
-        },
-      });
-      await a.load();
-      expect(a.state.lastDoneTime).toEqual(now);
     });
 
     test.each([

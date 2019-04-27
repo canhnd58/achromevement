@@ -10,7 +10,7 @@
   ],
   "background": {
     "persistent": false,
-    "scripts": ["bg.js"]
+    "scripts": ["BG.js"]
   },
   "browser_action": {
     "default_icon": {
@@ -18,13 +18,13 @@
       "24": "icon24.png",
       "32": "icon32.png"
     },
-    "default_popup": "pu.html"
+    "default_popup": "PU.html"
   },
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "css": ["common.css", "cs.css"],
-      "js": ["cs.js"]
+      "css": ["common.css", "CS.css"],
+      "js": ["CS.js"]
     }
   ],
   "icons": {
@@ -32,5 +32,5 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
-  "options_page": "op.html"
+  "options_page": "OP.html"
 }

@@ -34,16 +34,31 @@ const set = (obj, { force = false, delay = 2000 } = {}) =>
     }
   });
 
-const remove = async keys => {
-  if (timer != null) await set({}, { force: true });
-
-  return new Promise((resolve, reject) => {
+const remove = async keys =>
+  new Promise((resolve, reject) => {
     chrome.storage.sync.remove(keys, () => {
       if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
-      else resolve();
+      else {
+        keys.forEach(k => delete current[k]);
+        resolve();
+      }
     });
   });
-};
+
+const clear = async () =>
+  new Promise((resolve, reject) => {
+    chrome.storage.sync.clear(() => {
+      if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+      else {
+        if (timer != null) {
+          clearTimeout(timer);
+          timer = null;
+        }
+        current = {};
+        resolve();
+      }
+    });
+  });
 
 const get = keys =>
   new Promise((resolve, reject) => {
@@ -54,4 +69,4 @@ const get = keys =>
     });
   });
 
-export default { set, get, remove };
+export default { set, get, remove, clear };
